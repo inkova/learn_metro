@@ -42,6 +42,45 @@ int recovery_station(int *number_station, int *user_line, int c, char *right_nam
     return -2;
 }
 
+int generation_question_1(int i, char **name_linies, char * right_name, int *user_line, int *number_station, int b, int *mass_c)
+{
+    printf("What station is on the %s branch?\n", name_linies[i]);
+    int j,k,siz, number=generation(3);
+    int c;
+    char wrong_name[100];
+    user_line[i]=0;
+    b-=number_station[i];
+    for(j=0; j<4; j++)
+        if(j==number) {
+            if (j%2) printf("%d)  %s", (j+1), right_name);
+            else {
+                    printf("%d)  ", (j+1));
+                    siz=strlen(right_name);
+                    for(k=0; k< (siz-1); k++) printf("%c", right_name[k]);
+                        printf("\t\t");
+                 }
+        }
+        else {
+           while(1){
+              c=generation(b);
+              siz=0;
+              for(k=0;k<j; k++) if(c!=mass_c[k]) siz++;
+              if(siz==j) break;
+            }
+            mass_c[j]=c;
+            if((recovery_station(number_station, user_line, c, wrong_name))==-1) return -1;
+            if (j%2) printf("%d)  %s", (j+1), wrong_name);
+            else {
+                    siz=strlen(wrong_name);
+                    printf("%d)  ",(j+1));
+                    for(k=0; k<(siz-1); k++) printf("%c", wrong_name[k]);
+                        printf("\t\t");
+                 }
+     }
+    user_line[i]=1;
+    return number;
+}
+
 int main()
 {
    srand(time(NULL));
@@ -51,12 +90,19 @@ int main()
    char *name_linies[13]={"Sokol'nicheskaya(KRASNAYA)", "Zamoskvoreckaya(ZELYONAYA)", "Arbatsko-Pokrovskaya(SINAYA)", "Filevskaya(GOLUBAYA)", "Kol'cevaya(KORICHNEVAYA)", "Kaluzhsko-Rizhskaya(ORANZHEVAYA)", "Tagansko-Krasnopresnenskaya(FIOLETOVAYA)", "Kalininskaya(ZHYOLTAYA)", "Serpuhovsko-Timiryazevskaya(SERAYA)", "Lyublinsko-Dmitrovskaya(SALATOVAYA)", "Kahovskaya(BIRYUZOVAYA)", "Butovskaya(SERO-GOLUBAYA)", "Moskovskoe central'noe kol'co(BELO-KRASNAYA)"}; // DOBAVKA ZVETOV
 
    int b=find_b(user_line, number_station);
-  int c=generation(b);
+
+   int c=generation(b);
+
    char right_name[100];
    i=recovery_station(number_station, user_line, c, right_name);
    if(i==-1) return -1;
 
    printf("%s \n", right_name);
    printf("%s\n", name_linies[i]);
+
+  int mass_c[4]; for(j=0;j<4; j++) mass_c[j]=(-1);
+  j=generation_question_1(i, name_linies, right_name, user_line,number_station, b, mass_c);
+  if(j==-1) return -2;
+
  return 0;
 }
