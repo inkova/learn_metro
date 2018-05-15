@@ -81,28 +81,47 @@ int generation_question_1(int i, char **name_linies, char * right_name, int *use
     return number;
 }
 
+int check_answer_1(int answer, int number, char* right_name, int c, int *number_station, int *user_line)
+{
+      if( answer!=number ) {
+                        char wrong_name[100];
+
+                       if((recovery_station(number_station, user_line, c, wrong_name))==-1) return -1;
+                        printf("right answer-%s\nyuor answer - %s", right_name, wrong_name);
+                    }
+      else printf("YOUR ANSWER IS RIGHT!!!");
+}
+
 int main()
 {
    srand(time(NULL));
    int number_station[13]= {22, 23, 22, 13, 12, 24, 23, 16, 25, 23, 3, 7, 31};
-   int user_line[13], user_question[4];
-   int i,j; for(i=0; i<13; i++) user_line[i]=1; for(i=0; i<4; i++) user_question[i]=1;
+   int user_line[13], user_question[4], mass_c[4];
+   int i,j,k,c, answer; for(i=0; i<13; i++) user_line[i]=1; for(i=0; i<4; i++) user_question[i]=1;
+   char right_name[100];
    char *name_linies[13]={"Sokol'nicheskaya(KRASNAYA)", "Zamoskvoreckaya(ZELYONAYA)", "Arbatsko-Pokrovskaya(SINAYA)", "Filevskaya(GOLUBAYA)", "Kol'cevaya(KORICHNEVAYA)", "Kaluzhsko-Rizhskaya(ORANZHEVAYA)", "Tagansko-Krasnopresnenskaya(FIOLETOVAYA)", "Kalininskaya(ZHYOLTAYA)", "Serpuhovsko-Timiryazevskaya(SERAYA)", "Lyublinsko-Dmitrovskaya(SALATOVAYA)", "Kahovskaya(BIRYUZOVAYA)", "Butovskaya(SERO-GOLUBAYA)", "Moskovskoe central'noe kol'co(BELO-KRASNAYA)"}; // DOBAVKA ZVETOV
 
    int b=find_b(user_line, number_station);
+   int user_count=10;
+   for(k=0; k < user_count; k++){
+     c=generation(b);
 
-   int c=generation(b);
+     i=recovery_station(number_station, user_line, c, right_name);
+     if(i==-1) return -1;
 
-   char right_name[100];
-   i=recovery_station(number_station, user_line, c, right_name);
-   if(i==-1) return -1;
+     printf("%s \n", right_name);
 
-   printf("%s \n", right_name);
-   printf("%s\n", name_linies[i]);
+     for(j=0;j<4; j++) mass_c[j]=(-1);
+     j=generation_question_1(i, name_linies, right_name, user_line,number_station, b, mass_c);
+     if(j==-1) return -2;
 
-  int mass_c[4]; for(j=0;j<4; j++) mass_c[j]=(-1);
-  j=generation_question_1(i, name_linies, right_name, user_line,number_station, b, mass_c);
-  if(j==-1) return -2;
+     scanf("%d", &answer);
+    answer--;
+     user_line[i]=0;
+     if((check_answer_1(answer, j, right_name, mass_c[answer], number_station, user_line))==-1) return -3;
+     user_line[i]=1;
+     printf("\n\n\n\n\n\n");
+   }
 
  return 0;
 }
