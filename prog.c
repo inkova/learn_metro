@@ -10,11 +10,19 @@ int generation( int b)  //a=0
     return c;
 }
 
-int find_b(int *user_line, int *number_station) //viszitivaet b
+int find_st_b(int *user_line, int *number_station) //viszitivaet b
 {
     int b=0, i;
     for(i=0; i<13; i++)
-    if (user_line[i]) b+=number_station[i];
+      if (user_line[i]) b+=number_station[i];
+    return b;
+}
+
+int find_ln_b(int *user_line)
+{
+    int b=0, i;
+    for(i=0; i<13; i++)
+      if (user_line[i]) b++;
     return b;
 }
 
@@ -40,6 +48,22 @@ int recovery_station(int *number_station, int *user_line, int c, char *right_nam
         else
             for(j=0; j<number_station[i]; j++) fgets(right_name, 100, file);
     return -2;
+}
+
+int recovery_line(int c, int *user_line)
+{
+  int i=0, j=0;
+  while(c>1)
+    if(user_line[j]){
+        c--;
+        j++;
+        i++;
+    }
+    else {
+        j++;
+        i++;
+    }
+    return i;
 }
 
 int generation_question_1(int i, char **name_linies, char * right_name, int *user_line, int *number_station, int b, int *mass_c)
@@ -101,7 +125,7 @@ int main()
    char right_name[100];
    char *name_linies[13]={"Sokol'nicheskaya(KRASNAYA)", "Zamoskvoreckaya(ZELYONAYA)", "Arbatsko-Pokrovskaya(SINAYA)", "Filevskaya(GOLUBAYA)", "Kol'cevaya(KORICHNEVAYA)", "Kaluzhsko-Rizhskaya(ORANZHEVAYA)", "Tagansko-Krasnopresnenskaya(FIOLETOVAYA)", "Kalininskaya(ZHYOLTAYA)", "Serpuhovsko-Timiryazevskaya(SERAYA)", "Lyublinsko-Dmitrovskaya(SALATOVAYA)", "Kahovskaya(BIRYUZOVAYA)", "Butovskaya(SERO-GOLUBAYA)", "Moskovskoe central'noe kol'co(BELO-KRASNAYA)"}; // DOBAVKA ZVETOV
 
-   int b=find_b(user_line, number_station);
+   int b=find_st_b(user_line, number_station);
    int user_count=10;
    for(k=0; k < user_count; k++){
      c=generation(b);
